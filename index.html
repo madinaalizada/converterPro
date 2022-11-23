@@ -5,30 +5,54 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="./assets/icon.png" type="image/x-icon">
     <link rel="stylesheet" href="./style.css">
-    <title>Currency Converter Pro</title>
+    <title>Currency Converter</title>
 </head>
 
 <body>
-    <div class="container">
-        <form>
-            <div class="from">
-                <select id="from_valyuta" name="from_valyuta">
-                    <option value="0" selected>Choose symbol</option>
-                </select>
-                <input type="number" name="from_input" id="from_input" defaultValue=1/>
-            </div>
-            <div class="to">
-                <select id="to_valyuta" name="to_valyuta">
-                    <option value="0" selected>Choose symbol</option>
-                </select>
-                <input type="number" name="to_input" id="to_input"/>
-            </div>
-        </form>
+    <!-- <div class="container">
+            <div class="header">
+                <p>Valyuta</p>
+                <div class="add_valyuta_section">
+                    <div class="search none">
+                        <input type="text"/><span id="show_valyuta_btn">+</span>
+                        <select id="show_valyuta" class="none">
 
+                        </select>
+                    </div>
+                    <button id="add_valyuta">+</button>
+                </div>
+            </div>
+            <div class="main-currencies-list">
+                 <div class="main-currencies-item">
+                    <div class="div-header">AZN</div>
+                    <input type="text"/>
+                    <div class="div-footer">
+                        <p>21.11.2022</p>
+                        <p>1 AZN = 1 AZN</p>
+                    </div>
+                </div>
+            </div>
+    </div> -->
+    
+    <select id="selectForCurrency" name="selectForCurrency">
+        
+    </select>
+    <form action="">
+        <div class="mainCurrenciesList">
+        <!-- <div class="main-currencies-item">
+            <div class="div-header">AZN</div>
+           <input type="text"/>
+           <div class="div-footer">
+               <p>21.11.2022</p>
+               <p>1 AZN = 1 AZN</p>
+            </div>
+        </div> -->
     </div>
+</form>
 
-    <script src="./app.js"></script>
+    <script src="./index.js"></script>
 </body>
 
 </html>

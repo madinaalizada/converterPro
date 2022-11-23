@@ -1,72 +1,66 @@
-const form = document.querySelector('form');
+const addValyutaBtn = document.querySelector('#add_valyuta');
+const searchDiv = document.querySelector('.search');
+const show_valyuta_btn = document.querySelector('#show_valyuta_btn');
+const showValyutaSelectBox = document.querySelector('#show_valyuta');
+const main_currencies_list = document.querySelector('.main-currencies-list');
 
-const selectFrom = document.querySelector('#from_valyuta');
-const selectTo = document.querySelector('#to_valyuta');
-
-const toInput = document.querySelector('#to_input');
-const fromInput = document.querySelector('#from_input');
-
-let direction = true;
-
+let currencies = [];
+let selectedCurrencies = ['USD','GBP','AZN', 'EUR', 'RUB'];
+let mainCurrencies = 'AZN';
 const baseUrl = 'https://api.exchangerate.host/';
 const symbolsUrl = new URL('/symbols', baseUrl);
 const converterUrl = new URL('/convert', baseUrl);
+const currency = {date: null, result: 0};
+const getCurrency = async (v) => {
+    converterUrl.searchParams.set('from', mainCurrencies);
+    converterUrl.searchParams.set('to', v);
+    await fetch(converterUrl).then(res => res.json()).then(data => {
+        console.log(data);
+        currency.date = data.date;
+        currency.result = data.result;
+    });
+    
+    console.log(currency);
+    const main_currencies_item = document.createElement('div');
+    main_currencies_item.classList.add('main-currencies-item');
+    main_currencies_item.id = v + '_currency';
+    main_currencies_item.innerHTML= `<div class="div-header">${v}</div>
+    <input type="text"/> <div class="div-footer">
+    <p>${currency.date}</p>
+    <p>1 ${mainCurrencies} = ${currency.result} ${v}</p>
+    </div>`;
+    main_currencies_list.append(main_currencies_item);
+}
+
+selectedCurrencies.map(v => {
+    getCurrency(v);
+});
+
+addValyutaBtn.addEventListener('click', ()=> {
+    searchDiv.classList.toggle('none');
+});
+
+show_valyuta_btn.addEventListener('click', ()=> {
+    showValyutaSelectBox.classList.toggle('none');
+});
+
+
 const symbols = fetch(symbolsUrl).then(res => res.json())
 .then(data => {
     Object.keys(data.symbols).map((v, i) => {
-        selectFrom.options[selectFrom.options.length] = new Option(v, v);
-        selectTo.options[selectTo.options.length] = new Option(v, v);
+        showValyutaSelectBox.options[showValyutaSelectBox.options.length] = new Option(v, v);
     });
 });
 
-form.addEventListener('input', ()=> {
-    const formData = new FormData(form);
-    const from_valyuta = formData.get('from_valyuta');
-    const to_valyuta = formData.get('to_valyuta');
-
-    const from_input = formData.get('from_input')
-    const to_input = formData.get('to_input')
-    // console.log(`From Valyuta : ${from_valyuta} to valyuta: ${to_valyuta} From input: ${from_input} To input: ${to_input}`);
-
-    if(from_valyuta != '0' && to_valyuta != '0') {
-
-        if (direction) {
-            converterUrl.searchParams.set('from', from_valyuta);
-            converterUrl.searchParams.set('to', to_valyuta);
-            converterUrl.searchParams.set('amount', from_input);
-            fetch(converterUrl).then(res => res.json())
-            .then(data => {
-                toInput.value = data.result;
-            });
-        }
-        else {
-            console.log(toInput);
-            converterUrl.searchParams.set('from', to_valyuta);
-            converterUrl.searchParams.set('to', from_valyuta);
-            converterUrl.searchParams.set('amount', to_input);
-            fetch(converterUrl).then(res => res.json())
-            .then(data => {
-                console.log(data.result);
-                fromInput.value = data.result;
-            });
-        }
-
+showValyutaSelectBox.addEventListener('input', (e)=> {
+    console.log(e.target.value);
+    if(selectedCurrencies.includes(e.target.value)) {
+        selectedCurrencies = selectedCurrencies.filter(v => v != e.target.value);
+        document.querySelector(`#${e.target.value}_currency`).remove();
     }
+    else {
+        selectedCurrencies.push(e.target.value);
+        getCurrency(e.target.value);
+    }
+    console.log(selectedCurrencies);
 });
-
-
-toInput.addEventListener('keyup', ()=> {
-    direction = false;
-});
-
-fromInput.addEventListener('keyup', ()=> {
-    direction = true;
-});
-
-selectFrom.addEventListener('select', ()=> {
-    direction = true;
-});
-
-selectTo.addEventListener('select', ()=> {
-    direction = true;
-})
