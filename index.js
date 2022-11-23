@@ -3,9 +3,10 @@ const selectForCurrency = document.querySelector('#selectForCurrency');
 const mainCurrenciesList = document.querySelector('.mainCurrenciesList');
 const inputsForAmount = document.querySelectorAll('input');
 
-let selectedCurrencies = [{currency: 'AZN', amount: 1}, {currency: 'RUB', amount: 0}, {currency: 'EUR', amount: 0}, {currency: 'USD', amount: 0}];
+let selectedCurrencies = [{currency: 'AZN', amount: 0}, {currency: 'RUB', amount: 0}, {currency: 'EUR', amount: 0}, {currency: 'USD', amount: 0}];
 let currencies = [];
-let mainCurrency = 'AZN';
+// let mainCurrency = 'AZN';
+let mainCurrency = selectedCurrencies[0].currency;
 let mainAmount = 1;
 
 const baseUrl = 'https://api.exchangerate.host/';
@@ -52,7 +53,7 @@ const addedCurrency = async (v) => {
     
     if(v.currency != mainCurrency) {
         converterUrl.searchParams.set('from', mainCurrency);
-    converterUrl.searchParams.set('to', v.currency);
+        converterUrl.searchParams.set('to', v.currency);
         converterUrl.searchParams.set('amount', mainAmount);
         await fetch(converterUrl).then(res => res.json()).then(data => {
             currency.date = data.date;
@@ -77,6 +78,9 @@ selectForCurrency.addEventListener('input', (e)=> {
         if(currencies.includes(newCurrency)) {
             selectedCurrencies = selectedCurrencies.filter(v => v != newCurrency);
             document.querySelector(`#${newCurrency}_currency`).remove();
+            // if(!selectedCurrencies.includes(mainCurrency)){
+            //     mainCurrency = selectedCurrencies[0].currency;
+            // }
         }
         else {
             selectedCurrencies.push({currency: newCurrency, amount: 0});
