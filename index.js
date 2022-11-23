@@ -70,17 +70,20 @@ const addedCurrency = async (v) => {
     });
 
 selectForCurrency.addEventListener('input', (e)=> {
-    const newCurrency = e.target.value;
-    const currencies = [];
-    selectedCurrencies.map(v => currencies.push(v.currency));
-    if(currencies.includes(newCurrency)) {
-        selectedCurrencies = selectedCurrencies.filter(v => v != newCurrency);
-        document.querySelector(`#${newCurrency}_currency`).remove();
-    }
-    else {
-        selectedCurrencies.push({currency: newCurrency, amount: 0});
-        getCurrency(newCurrency);
-        addedCurrency({currency: newCurrency, amount: 0}, mainAmount);
+    if(e.target.value != "0") {
+        const newCurrency = e.target.value;
+        const currencies = [];
+        selectedCurrencies.map(v => currencies.push(v.currency));
+        if(currencies.includes(newCurrency)) {
+            selectedCurrencies = selectedCurrencies.filter(v => v != newCurrency);
+            document.querySelector(`#${newCurrency}_currency`).remove();
+        }
+        else {
+            selectedCurrencies.push({currency: newCurrency, amount: 0});
+            getCurrency(newCurrency);
+            addedCurrency({currency: newCurrency, amount: 0}, mainAmount);
+        }
+        selectForCurrency.value = "0";
     }
 });
 
