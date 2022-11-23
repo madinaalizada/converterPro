@@ -39,11 +39,35 @@ const getCurrency = async (v, amount = 1) => {
     </div>`;
     mainCurrenciesList.append(mainCurrenciesItem);
 };
+const addedCurrency = async (v) => {
+    const currency = {date: null, result: 0};
+    converterUrl.searchParams.set('from', mainCurrency);
+    converterUrl.searchParams.set('to', v.currency);
+    converterUrl.searchParams.set('amount', 1);
+        await fetch(converterUrl).then(res => res.json()).then(data => {
+            currency.date = data.date;
+            currency.result = data.result;
+        });
+        document.querySelector(`#${v.currency}_currency_label`).value = `1 ${mainCurrency} = ${currency.result} ${v.currency}`;
+    
+    if(v.currency != mainCurrency) {
+        converterUrl.searchParams.set('from', mainCurrency);
+    converterUrl.searchParams.set('to', v.currency);
+        converterUrl.searchParams.set('amount', mainAmount);
+        await fetch(converterUrl).then(res => res.json()).then(data => {
+            currency.date = data.date;
+            currency.result = data.result;
+        });
+    
+        document.querySelector(`#${v.currency}_currency_input`).value = currency.result;
+    }
+}
 
-selectedCurrencies.map(async v => {
-    getCurrency(v.currency);
-    await addedCurrency(v);
-});
+     selectedCurrencies.map(async v => {
+        getCurrency(v.currency);
+        await addedCurrency(v);
+        document.querySelector('#AZN_currency_input').defaultValue = 1;
+    });
 
 selectForCurrency.addEventListener('input', (e)=> {
     const newCurrency = e.target.value;
@@ -68,24 +92,3 @@ form.addEventListener('input', async (e)=> {
     });
 });
 
-const addedCurrency = async (v) => {
-    const currency = {date: null, result: 0};
-    converterUrl.searchParams.set('from', mainCurrency);
-    converterUrl.searchParams.set('to', v.currency);
-    converterUrl.searchParams.set('amount', 1);
-        await fetch(converterUrl).then(res => res.json()).then(data => {
-            currency.date = data.date;
-            currency.result = data.result;
-        });
-        document.querySelector(`#${v.currency}_currency_label`).value = `1 ${mainCurrency} = ${currency.result} ${v.currency}`;
-    
-    if(v.currency != mainCurrency) {
-        converterUrl.searchParams.set('amount', mainAmount);
-        await fetch(converterUrl).then(res => res.json()).then(data => {
-            currency.date = data.date;
-            currency.result = data.result;
-        });
-    
-        document.querySelector(`#${v.currency}_currency_input`).value = currency.result;
-    }
-}
